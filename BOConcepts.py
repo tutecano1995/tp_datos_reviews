@@ -88,8 +88,6 @@ def create_bag_of_centroids( wordlist, word_centroid_map ):
 	# Return the "bag of centroids"
 	return bag_of_centroids
 
-
-
 print("Hacemos BOCs")
 i = 0
 matriz_bocs = np.empty((0,num_clusters))
@@ -120,8 +118,8 @@ Plot.show()
 
 
 estrellas_seleccionadas=np.array(estrellas_seleccionadas)
-with open("/home/joaquintz/Desktop/facultad/datos/tsne_10k_random.json", 'w') as f:
+with open("tsne_10k_random.json", 'w') as f:
     json.dump(reduced_set,f,cls=NumpyEncoder)
 
-with open("/home/joaquintz/Desktop/facultad/datos/tsne_10k_estrellas.json", 'w') as f:
+with open("tsne_10k_estrellas.json", 'w') as f:
     json.dump(estrellas_seleccionadas,f,cls=NumpyEncoder)

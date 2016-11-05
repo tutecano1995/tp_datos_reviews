@@ -30,6 +30,27 @@ def create_bag_of_centroids( wordlist, word_centroid_map ):
 	# Return the "bag of centroids"
 	return bag_of_centroids
 
+#Funcion muy cabeza que sirve para seleccionar aproximadamente 1500 de cada valor y que sirve solo para este caso, y que aproxima a una seleccion homogenea
+#Le otorgo probabilidad 1500/#reviews_con_esa_estrella dependiendo de que estrella toca
+#Para este caso el total de reviews por puntuación es: [ 37899,  21576,  30305,  56900, 260571]
+def elegir_filas_estrellas_homogeneas_2(estrellas):
+    contador_estrellas=np.array([0]*5)
+    cant_reviews=len(estrellas)
+    filas = []
+    total = 0
+    for i in xrange(len(estrellas)):
+    	rand = random.uniform(0,1)
+    	if int(estrellas[i]) == 1:
+    		if rand<0.039: filas.append(i)
+    	if int(estrellas[i]) == 2:
+    		if rand<0.069: filas.append(i)
+    	if int(estrellas[i]) == 3:
+    		if rand<0.049: filas.append(i)
+    	if int(estrellas[i]) == 4:
+    		if rand<0.026: filas.append(i)
+    	if int(estrellas[i]) == 5:
+    		if rand<0.0057: filas.append(i)    		
+    return filas
 
 model = Word2Vec.load_word2vec_format("data/GoogleNews-vectors-negative300.bin",binary = True)
 words = set()
@@ -99,11 +120,12 @@ for reviewid, review in reviews.iteritems():
 	matriz_bocs = np.vstack((matriz_bocs,review['vec']))
 	estrellas_bocs.append(review['pred'])
 
+#filas = elegir_filas_estrellas_homogeneas_2(estrellas_bocs)
 filas = elegir_filas_random(matriz_bocs)
 estrellas_seleccionadas = [int(estrellas_bocs[k]) for k in filas]
 matriz_red = matriz_bocs[filas]
 
-colourmap= {1:'#F64646',2:'#E17133',3:'#CC9C22',4:'#86AD0E',5:'#1F8F00'}
+colourmap= {1:'#011f4b',2:'#03396c',3:'#005b96',4:'#6497b1',5:'#b3cde0'}
 colours = [colourmap[n] for n in estrellas_seleccionadas]
 
 print("Y ahora reducimos con tsne")
@@ -113,7 +135,7 @@ star_hist=np.array([0]*5)
 for j in estrellas_seleccionadas:
     star_hist[j-1]+=1
 
-Plot.scatter(reduced_set[:,0], reduced_set[:,1],  c=colours,alpha=1,s=80)
+Plot.scatter(reduced_set[:,0],reduced_set[:,1],c=colours_2,alpha=1,s=80,marker='.',lw=0)
 Plot.show()
 
 

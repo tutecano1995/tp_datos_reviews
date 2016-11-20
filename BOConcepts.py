@@ -77,14 +77,14 @@ with open('train_processed.csv','r') as train_file:
 
 print("train_processed.csv cargado!")
 
-test_review = {}
+test_reviews = {}
 
 with open('test_processed.csv','r') as test_file:
 	test_csv = csv.reader(test_file)
 	next(test_csv)
 	for row in test_csv:
 			reviewid = row[1]
-			text = row[10]
+			text = row[9]
 			text_words = text.split(" ")
 			if not(21<len(text_words)<223): continue
 			test_reviews[reviewid] = {}
@@ -115,7 +115,7 @@ for word in words:
 #https://www.kaggle.com/c/word2vec-nlp-tutorial/details/part-3-more-fun-with-word-vectors
 
 print("Clustering - KMeans")
-num_clusters = 100
+num_clusters = 50
 kmeans_clustering = KMeans (n_clusters = num_clusters)
 idx = kmeans_clustering.fit_predict(selected_vectors)
 word_centroid_map = dict(zip(word_index,idx))
@@ -183,7 +183,7 @@ print("No hacemos TSNE")
 #except:
 #	print("No se pudieron guardar los modelos")
 
-train_matriz = numpy.matrix(train_matriz)
+train_matriz = np.matrix(train_matriz)
 dtrain = xgb.DMatrix(train_matriz)
 param = {'max_depth':10,'eta':0.2,'silent':0,'objective':'reg:linear'}
 dtrain = xgb.DMatrix(train_matriz,label = estrellas_bocs)
@@ -192,7 +192,7 @@ bst = xgb.train(param,dtrain,num_boost_round = 3000)
 print("Guardamos los modelos")
 
 try: 
-	with open(str(num_clusters)+"_reg_xgb.csv") as f:
+	with open(str(num_clusters)+"_reg_xgb.csv", 'w') as f:
 		f_writer = csv.writer(f)
 		f_writer.writerow(['Id','Prediction'])
 		for reviewid,review in test_reviews.iteritems():

@@ -191,6 +191,17 @@ bst = xgb.train(param,dtrain,num_boost_round = 3000)
 
 print("Guardamos los modelos")
 
+#Convierto las componentes de los vectores a int para poder guardarlo en json
+
+for reviewid,review in reviews.iteritems():
+		for i in range(len(review['vec'])):
+			review['vec'][i] = int(review['vec'][i])
+
+for reviewid,review in test_reviews.iteritems():
+		for i in range(len(review['vec'])):
+			review['vec'][i] = int(review['vec'][i])
+
+
 try: 
 	with open(str(num_clusters)+"_reg_xgb.csv", 'w') as f:
 		f_writer = csv.writer(f)
